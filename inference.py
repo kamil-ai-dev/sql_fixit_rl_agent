@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from sql_debug_env import SQLDebugAction, SQLDebugEnv
+from sql_fixit_rl_agent import SQLDebugAction, SQLDebugEnv
 
 # Load .env file if present
 load_dotenv(Path(__file__).parent / ".env")
@@ -49,8 +49,8 @@ TASKS = ["easy", "medium", "hard"]
 
 # Per-task step budgets (must stay under 20 min total runtime)
 MAX_STEPS = {
-    "easy":   6,
-    "medium": 10,
+    "easy":   15,
+    "medium": 15,
     "hard":   15,
 }
 
@@ -227,12 +227,12 @@ async def run_task(client: OpenAI, task_name: str) -> Dict[str, Any]:
         env = SQLDebugEnv(base_url=ENV_URL)
 
     try:
-        result = await env.reset({"task": task_name})
+        result = await env.reset(task=task_name)
         obs    = result.observation
 
         for step in range(1, max_steps + 1):
-            if result.done:
-                break
+            # if result.done:
+                # break
 
             action = get_agent_action(client, obs, step, history)
             result = await env.step(action)

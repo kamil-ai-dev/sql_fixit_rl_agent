@@ -1,4 +1,4 @@
-"""SQL Debug Environment Client."""
+"""SQL FixIt RL Agent Client."""
 
 from typing import Dict
 

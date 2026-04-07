@@ -1,5 +1,5 @@
 spec_version: 1
-name: sql-debug
+name: sql-fixit-rl-agent
 type: space
 runtime: fastapi
 app: server.app:app

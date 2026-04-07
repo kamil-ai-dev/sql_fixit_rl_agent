@@ -1,4 +1,4 @@
-"""SQL Debug Environment."""
+"""SQL FixIt RL Agent."""
 
 from .client import SQLDebugEnv
 from .models import SQLDebugAction, SQLDebugObservation

@@ -29,7 +29,7 @@ from openenv.core.env_server.types import State
 try:
     from ..models import SQLDebugAction, SQLDebugObservation
 except ImportError:
-    from models import SQLDebugAction, SQLDebugObservation
+    from sql_fixit_rl_agent.models import SQLDebugAction, SQLDebugObservation
 
 
 # ---------------------------------------------------------------------------

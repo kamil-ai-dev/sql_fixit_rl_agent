@@ -1599,7 +1599,7 @@ core = [
 ]
 
 [[package]]
-name = "openenv-sql-debug"
+name = "openenv-sql-fixit-rl-agent"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

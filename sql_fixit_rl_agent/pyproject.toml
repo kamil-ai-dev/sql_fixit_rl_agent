@@ -3,9 +3,9 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "openenv-sql-debug"
+name = "openenv-sql-fixit-rl-agent"
 version = "0.1.0"
-description = "SQL Debug environment for OpenEnv — agent diagnoses and fixes broken SQL queries"
+description = "SQL FixIt RL Agent — agent diagnoses and fixes broken SQL queries"
 requires-python = ">=3.10"
 dependencies = [
     "openenv-core[core]>=0.2.2",
@@ -21,9 +21,9 @@ dev = [
 ]
 
 [project.scripts]
-server = "sql_debug_env.server.app:main"
+server = "sql_fixit_rl_agent.server.app:main"
 
 [tool.setuptools]
 include-package-data = true
-packages = ["sql_debug_env", "sql_debug_env.server"]
-package-dir = { "sql_debug_env" = ".", "sql_debug_env.server" = "server" }
+packages = ["sql_fixit_rl_agent", "sql_fixit_rl_agent.server"]
+package-dir = { "sql_fixit_rl_agent" = ".", "sql_fixit_rl_agent.server" = "server" }

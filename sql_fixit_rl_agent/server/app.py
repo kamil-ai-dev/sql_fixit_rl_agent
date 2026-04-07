@@ -29,8 +29,8 @@ try:
     from ..models import SQLDebugAction, SQLDebugObservation
     from .sql_debug_environment import SQLDebugEnvironment
 except ModuleNotFoundError:
-    from models import SQLDebugAction, SQLDebugObservation
-    from server.sql_debug_environment import SQLDebugEnvironment
+    from sql_fixit_rl_agent.models import SQLDebugAction, SQLDebugObservation
+    from sql_fixit_rl_agent.server.sql_debug_environment import SQLDebugEnvironment
 
 # ---------------------------------------------------------------------------
 # App setup — pass a factory function (callable) to create_app

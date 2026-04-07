@@ -22,14 +22,14 @@ RUN apt-get update && \
 
 # Build argument to control whether we're building standalone or in-repo
 ARG BUILD_MODE=in-repo
-ARG ENV_NAME=sql_debug_env
+ARG ENV_NAME=sql_fixit_rl_agent
 
 # Copy environment code (always at root of build context)
 COPY . /app/env
 
 # For in-repo builds, openenv is already vendored in the build context
 # For standalone builds, openenv will be installed via pyproject.toml
-WORKDIR /app/env/sql_debug_env
+WORKDIR /app/env/sql_fixit_rl_agent
 
 # Ensure uv is available (for local builds where base image lacks it)
 RUN if ! command -v uv >/dev/null 2>&1; then \
@@ -60,7 +60,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /app
 
 # Copy the virtual environment from builder
-COPY --from=builder /app/env/sql_debug_env/.venv /app/.venv
+COPY --from=builder /app/env/sql_fixit_rl_agent/.venv /app/.venv
 
 # Copy the environment code
 COPY --from=builder /app/env /app/env
@@ -76,5 +76,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the FastAPI server
-# Module path: sql_debug_env.server.app (matches the renamed package)
-CMD ["sh", "-c", "cd /app/env && PYTHONPATH=/app/env python -m uvicorn sql_debug_env.server.app:app --host 0.0.0.0 --port 8000"]
+CMD ["sh", "-c", "cd /app/env && PYTHONPATH=/app/env python -m uvicorn sql_fixit_rl_agent.server.app:app --host 0.0.0.0 --port 8000"]
