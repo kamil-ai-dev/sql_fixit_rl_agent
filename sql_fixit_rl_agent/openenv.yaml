@@ -9,12 +9,12 @@ tasks:
   - name: easy
     description: "Fix a single syntax error in a simple SELECT query"
     difficulty: easy
-    max_steps: 6
+    max_steps: 15
 
   - name: medium
     description: "Fix a wrong column reference in a JOIN across two tables"
     difficulty: medium
-    max_steps: 10
+    max_steps: 15
 
   - name: hard
     description: "Fix three simultaneous bugs: wrong aggregate, missing GROUP BY, wrong filter clause"
