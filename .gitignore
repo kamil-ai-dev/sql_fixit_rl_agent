@@ -4,3 +4,7 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.env
+Problem_Statement/
+PRE_SUBMISSION_AUDIT.md
+validate-submission.sh

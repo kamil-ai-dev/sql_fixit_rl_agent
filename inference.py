@@ -43,7 +43,7 @@ API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 BENCHMARK    = "sql-debug"
 
-USE_DOCKER   = os.getenv("USE_DOCKER", "false").lower() == "true"
+USE_DOCKER   = os.getenv("USE_DOCKER", "true").lower() == "true"
 
 TASKS = ["easy", "medium", "hard"]
 
@@ -261,9 +261,11 @@ async def run_task(client: OpenAI, task_name: str) -> Dict[str, Any]:
                 break
 
         # Score = cumulative reward normalised to [0, 1]
-        # Max possible reward: schema bonus (0.2) + n run_query (0.3 each) + validate_fix (1.0)
-        # We use a fixed max of 2.0 so partial credit is meaningful
-        MAX_POSSIBLE = 2.0
+        # Per-task max possible rewards (list_tables + inspect_schema×2 + run_query×N + validate_fix):
+        #   easy:   0.10 + 0.30 + 0.90 + 1.00 = 2.30  → use 2.5
+        #   medium: 0.10 + 0.30 + 1.80 + 1.00 = 3.20  → use 3.5
+        #   hard:   0.10 + 0.30 + 2.70 + 1.00 = 4.10  → use 4.5
+        MAX_POSSIBLE = {"easy": 2.5, "medium": 3.5, "hard": 4.5}[task_name]
         raw_score = obs.cumulative_reward / MAX_POSSIBLE
         score     = min(max(raw_score, 0.0), 1.0)
         success   = obs.cumulative_reward >= (MAX_POSSIBLE * SUCCESS_THRESHOLD)

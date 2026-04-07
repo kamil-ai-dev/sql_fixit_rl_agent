@@ -54,17 +54,22 @@ app = create_app(
 )
 
 
-def main(host: str = "0.0.0.0", port: int = 8000):
-    """Entry point for direct execution."""
+def main(host: str = "0.0.0.0", port: int = 8000) -> None:
+    """Entry point for direct execution via [project.scripts].
+    
+    Usage: main()  # defaults to 0.0.0.0:8000
+    """
     import uvicorn
     uvicorn.run(app, host=host, port=port)
 
 
-if __name__ == "__main__":
+def _cli_entry() -> None:
+    """CLI entry point with argument parsing."""
     import argparse
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8000)
+    parser = argparse.ArgumentParser(description="SQL Debug Environment Server")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="Host to bind to")
+    parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
     parser.add_argument(
         "--task",
         type=str,
@@ -74,4 +79,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     os.environ["SQL_DEBUG_TASK"] = args.task
-    main(port=args.port)
+    main(host=args.host, port=args.port)
+
+
+if __name__ == "__main__":
+    _cli_entry()
