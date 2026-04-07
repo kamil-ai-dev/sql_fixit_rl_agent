@@ -1,0 +1,22 @@
+spec_version: 1
+name: sql-debug
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+
+tasks:
+  - name: easy
+    description: "Fix a single syntax error in a simple SELECT query"
+    difficulty: easy
+    max_steps: 6
+
+  - name: medium
+    description: "Fix a wrong column reference in a JOIN across two tables"
+    difficulty: medium
+    max_steps: 10
+
+  - name: hard
+    description: "Fix three simultaneous bugs: wrong aggregate, missing GROUP BY, wrong filter clause"
+    difficulty: hard
+    max_steps: 15

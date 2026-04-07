@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.git/
+.env
+.vscode/
+.idea/
+*.egg-info/
+Problem_Statement/
+!uv.lock

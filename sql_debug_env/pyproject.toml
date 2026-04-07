@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openenv-sql-debug"
+version = "0.1.0"
+description = "SQL Debug environment for OpenEnv — agent diagnoses and fixes broken SQL queries"
+requires-python = ">=3.10"
+dependencies = [
+    "openenv-core[core]>=0.2.2",
+    # No extra deps needed — uses stdlib sqlite3
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "python-dotenv>=1.0.0",
+    "openai>=1.0.0",
+]
+
+[project.scripts]
+server = "sql_debug_env.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["sql_debug_env", "sql_debug_env.server"]
+package-dir = { "sql_debug_env" = ".", "sql_debug_env.server" = "server" }
