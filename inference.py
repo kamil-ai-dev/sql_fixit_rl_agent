@@ -36,9 +36,9 @@ load_dotenv(Path(__file__).parent / ".env")
 # Configuration
 # ---------------------------------------------------------------------------
 
-IMAGE_NAME   = os.getenv("LOCAL_IMAGE_NAME", "sql-debug-env:latest")
+IMAGE_NAME   = os.getenv("LOCAL_IMAGE_NAME")
 ENV_URL      = os.getenv("ENV_URL", "http://localhost:8000")
-API_KEY      = os.getenv("HF_TOKEN") or os.getenv("API_KEY", "")
+API_KEY      = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 BENCHMARK    = "sql-debug"
@@ -231,8 +231,8 @@ async def run_task(client: OpenAI, task_name: str) -> Dict[str, Any]:
         obs    = result.observation
 
         for step in range(1, max_steps + 1):
-            # if result.done:
-                # break
+            if result.done:
+                break
 
             action = get_agent_action(client, obs, step, history)
             result = await env.step(action)
@@ -290,24 +290,8 @@ async def main() -> None:
     results = []
 
     for task_name in TASKS:
-        print(f"\n{'='*60}", flush=True)
-        print(f"Running task: {task_name.upper()}", flush=True)
-        print(f"{'='*60}", flush=True)
-
         summary = await run_task(client, task_name)
         results.append(summary)
-
-    # Final summary to stdout
-    print("\n[SUMMARY]", flush=True)
-    for r in results:
-        status = "✓" if r["success"] else "✗"
-        print(
-            f"  {status} {r['task']:8s}  score={r['score']:.3f}  steps={r['steps']}",
-            flush=True,
-        )
-
-    overall = sum(r["score"] for r in results) / len(results)
-    print(f"\n  Overall average score: {overall:.3f}", flush=True)
 
 
 if __name__ == "__main__":
