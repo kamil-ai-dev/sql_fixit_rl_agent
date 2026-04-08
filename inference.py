@@ -24,26 +24,29 @@ import textwrap
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 from openai import OpenAI
 
 from sql_fixit_rl_agent import SQLDebugAction, SQLDebugEnv
-
-# Load .env file if present
-load_dotenv(Path(__file__).parent / ".env")
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 
-IMAGE_NAME   = os.getenv("LOCAL_IMAGE_NAME")
+IMAGE_NAME   = os.getenv("LOCAL_IMAGE_NAME") or os.getenv("IMAGE_NAME")
 ENV_URL      = os.getenv("ENV_URL", "http://localhost:8000")
-API_KEY      = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
+API_KEY      = os.getenv("API_KEY") or os.getenv("HF_TOKEN")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 BENCHMARK    = "sql-debug"
 
-USE_DOCKER   = os.getenv("USE_DOCKER", "true").lower() == "true"
+# Use Docker if IMAGE_NAME is available, otherwise connect via HTTP
+USE_DOCKER   = bool(IMAGE_NAME)
 
 TASKS = ["easy", "medium", "hard"]
 
@@ -290,7 +293,12 @@ async def main() -> None:
     results = []
 
     for task_name in TASKS:
-        summary = await run_task(client, task_name)
+        try:
+            summary = await run_task(client, task_name)
+        except Exception as exc:
+            print(f"[DEBUG] Task {task_name} failed: {exc}", flush=True)
+            log_end(success=False, steps=0, score=0.0, rewards=[])
+            summary = {"task": task_name, "score": 0.0, "success": False, "steps": 0}
         results.append(summary)
 
 
